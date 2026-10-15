@@ -3,75 +3,75 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#123b52" />
-    <title>码上有解 · 商家工作台</title>
+    <meta name="theme-color" content="#142f3b" />
+    <title>Viusalized Studio · 码上有解</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <div class="app-shell">
       <aside class="sidebar">
-        <a class="brand" href="#overview" aria-label="码上有解工作台首页">
-          <span class="brand-mark">码</span>
-          <span><strong>码上有解</strong><small>商家工作台</small></span>
+        <a class="brand" href="#overview" aria-label="Viusalized Studio 工作台首页">
+          <span class="brand-mark" aria-hidden="true">VS</span>
+          <span><strong>Viusalized Studio</strong><small>码上有解 · 商家工作台</small></span>
         </a>
         <div class="workspace-label">工作空间</div>
         <nav class="main-nav" aria-label="主导航">
-          <button class="nav-item active" data-page="overview"><span class="nav-icon">◫</span>经营总览</button>
-          <button class="nav-item" data-page="inbox"><span class="nav-icon">▤</span>收件箱<span class="nav-count" id="unread-count">3</span></button>
-          <button class="nav-item" data-page="orders"><span class="nav-icon">▦</span>订单管理</button>
+          <button class="nav-item active" data-page="overview"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="5" rx="1.5"/><rect x="13.5" y="11.5" width="7" height="9" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/></svg>经营总览</button>
+          <button class="nav-item" data-page="inbox"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16v13H4z"/><path d="m4.5 7 7.5 6 7.5-6"/></svg>收件箱<span class="nav-count" id="unread-count">3</span></button>
+          <button class="nav-item" data-page="orders"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h14v15H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>订单管理</button>
         </nav>
         <div class="sidebar-bottom">
-          <div class="local-status"><span class="status-dot"></span><span><strong>本地演示模式</strong><small>数据保存在当前浏览器会话</small></span></div>
-          <div class="brand-footer">CODE &amp; SOLVE <span>·</span> 你的想法，我们码上实现</div>
+          <div class="local-status"><span class="status-dot"></span><span><strong>本地演示模式</strong><small>记录仅保存在本机浏览器</small></span></div>
+          <div class="brand-footer">VIUSALIZED STUDIO <span>·</span> 你的想法，我们码上实现</div>
         </div>
       </aside>
 
       <main class="main-area">
         <header class="topbar">
-          <div class="breadcrumb"><span>码上有解</span><b>/</b><strong id="breadcrumb-current">经营总览</strong></div>
+          <div class="breadcrumb"><span>Viusalized Studio</span><b>/</b><strong id="breadcrumb-current">经营总览</strong></div>
           <div class="topbar-right"><span class="demo-pill"><i></i>演示数据</span><span class="today" id="today-label"></span><button class="avatar" aria-label="本地工作空间">码</button></div>
         </header>
-        <div class="demo-notice"><span>ⓘ</span><p>当前页面使用模拟数据，未连接任何平台账号，也不会向平台发送消息或修改订单。</p></div>
+        <div class="demo-notice"><span class="notice-mark" aria-hidden="true">i</span><p>演示工作区 · 当前未连接平台账号，不会向平台发送消息或修改订单。</p></div>
 
         <section class="page active" id="page-overview" aria-labelledby="overview-title">
           <div class="page-heading">
-            <div><p class="eyebrow">今日 · 经营脉搏</p><h1 id="overview-title">早上好，码上有解</h1><p class="subtitle">把平台动静收在一处，找出下一条值得发布的内容。</p></div>
-            <button class="button button-soft" id="refresh-demo">↻ <span>刷新演示数据</span></button>
+            <div><h1 id="overview-title">经营总览</h1><p class="subtitle">统一查看咨询、成交与内容主题表现。</p></div>
+            <button class="button button-soft" id="refresh-demo"><svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4.5 17a8 8 0 0 0 13.2 1.5L20 16M4 12a8 8 0 0 1 13.2-6.5L20 7"/></svg><span>刷新演示数据</span></button>
           </div>
 
           <div class="metric-row">
-            <article class="metric-card"><div class="metric-top"><span>待回复咨询</span><span class="metric-symbol teal">✉</span></div><strong id="metric-inquiries">3</strong><small><b class="up">+1</b> 较昨日</small></article>
-            <article class="metric-card"><div class="metric-top"><span>成功订单</span><span class="metric-symbol blue">▦</span></div><strong id="metric-orders">5</strong><small>待确认 <b id="metric-pending">2</b> 笔</small></article>
+            <article class="metric-card"><div class="metric-top"><span>待回复咨询</span><span class="metric-symbol teal">IN</span></div><strong id="metric-inquiries">3</strong><small>来自五个平台的演示会话</small></article>
+            <article class="metric-card"><div class="metric-top"><span>成功订单</span><span class="metric-symbol blue">OK</span></div><strong id="metric-orders">5</strong><small>待确认 <b id="metric-pending">2</b> 笔</small></article>
             <article class="metric-card"><div class="metric-top"><span>本周成交额</span><span class="metric-symbol gold">¥</span></div><strong id="metric-revenue">¥2,460</strong><small>按演示订单金额汇总</small></article>
-            <article class="metric-card attention-card"><div class="metric-top"><span>本周有效互动</span><span class="metric-symbol coral">✳</span></div><strong id="metric-engagement">126</strong><small>点赞、收藏与评论 · 模拟口径</small></article>
+            <article class="metric-card attention-card"><div class="metric-top"><span>本周有效互动</span><span class="metric-symbol coral">7D</span></div><strong id="metric-engagement">126</strong><small>点赞、收藏与评论 · 模拟口径</small></article>
           </div>
 
           <div class="overview-grid">
             <section class="panel attention-panel">
               <div class="panel-heading">
                 <div><div class="heading-line"><h2>注意力矩阵</h2><span class="info-mark" title="以平台和内容主题交叉查看互动、咨询与订单">i</span></div><p>哪些内容正在把关注带到咨询和成交</p></div>
-                <div class="matrix-actions"><button class="text-button" id="add-signal">＋ 录入营销数据</button><label class="select-wrap"><span class="sr-only">矩阵指标</span><select id="matrix-metric"><option value="engagement">有效互动</option><option value="inquiries">咨询数</option><option value="orders">订单数</option></select></label></div>
+                <div class="matrix-actions"><button class="text-button" id="add-signal"><span aria-hidden="true">+</span> 录入营销数据</button><label class="select-wrap"><span class="sr-only">矩阵指标</span><select id="matrix-metric"><option value="engagement">有效互动</option><option value="inquiries">咨询数</option><option value="orders">订单数</option></select></label></div>
               </div>
               <div class="matrix-legend"><span><i class="legend-none"></i>无</span><span><i class="legend-low"></i>低</span><span><i class="legend-mid"></i>中</span><span><i class="legend-higher"></i>高</span><span><i class="legend-high"></i>最高</span><small>同一指标内比较</small></div>
               <div class="matrix-scroll"><div id="attention-matrix" class="attention-matrix" role="table" aria-label="平台与内容主题的注意力矩阵"></div></div>
               <div class="panel-foot"><span>数据窗口：近 7 天</span><span>数据来源：演示数据 · 更新时间 09:30</span></div>
             </section>
             <aside class="panel insight-panel">
-              <div class="panel-heading"><div><h2>内容线索</h2><p>从互动到订单，挑一个方向继续验证</p></div><span class="spark">✳</span></div>
+              <div class="panel-heading"><div><h2>内容线索</h2><p>从互动到订单，挑一个方向继续验证</p></div></div>
               <div id="insight-content" class="insight-content"></div>
-              <div class="insight-note"><span>↗</span><p>把内容主题标记到咨询和订单，后续才能看清哪些营销内容带来有效客户。</p></div>
+              <div class="insight-note"><p>把内容主题标记到咨询和订单，后续才能看清哪些营销内容带来有效客户。</p></div>
             </aside>
           </div>
 
           <div class="lower-grid">
             <section class="panel platform-panel"><div class="panel-heading"><div><h2>平台连接</h2><p>公开文档初核完成；账号授权与联调待办</p></div><a class="text-button" href="./docs/api-integration-research.md" target="_blank" rel="noopener">API 核实记录</a></div><div id="platform-list" class="platform-list"></div></section>
-            <section class="panel next-panel"><div class="panel-heading"><div><h2>待处理事项</h2><p>今天可以先完成的两件事</p></div></div><button class="task-link" data-open="inbox"><span class="task-icon inbox-icon">✉</span><span><strong>回复 3 条新咨询</strong><small>最早一条来自小红书 · 08:42</small></span><b>›</b></button><button class="task-link" data-open="orders"><span class="task-icon order-icon">▦</span><span><strong>处理 2 笔待确认订单</strong><small>预计 10 分钟内完成</small></span><b>›</b></button></section>
+            <section class="panel next-panel"><div class="panel-heading"><div><h2>待处理事项</h2><p>今天可以先完成的两件事</p></div></div><button class="task-link" data-open="inbox"><span class="task-icon inbox-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5h16v13H4z"/><path d="m4.5 7 7.5 6 7.5-6"/></svg></span><span><strong>回复 3 条新咨询</strong><small>最早一条来自小红书 · 08:42</small></span><svg class="task-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button><button class="task-link" data-open="orders"><span class="task-icon order-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4.5h14v15H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><span><strong>处理 2 笔待确认订单</strong><small>预计 10 分钟内完成</small></span><svg class="task-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></section>
           </div>
         </section>
 
         <section class="page" id="page-inbox" aria-labelledby="inbox-title">
-          <div class="page-heading compact-heading"><div><p class="eyebrow">对话集中在这里</p><h1 id="inbox-title">收件箱</h1><p class="subtitle">跨平台查看咨询，记录跟进状态和内容来源。</p></div><span class="sync-label"><i></i>演示会话</span></div>
-          <div class="inbox-toolbar"><label class="search-box"><span>⌕</span><input id="message-search" type="search" placeholder="搜索客户或消息" /></label><label class="filter-select"><span>平台</span><select id="platform-filter"><option value="all">全部平台</option><option>抖音</option><option>小红书</option><option>淘宝</option><option>拼多多</option><option>闲鱼</option></select></label><label class="check-filter"><input id="unread-filter" type="checkbox" />只看未读</label></div>
+          <div class="page-heading compact-heading"><div><h1 id="inbox-title">收件箱</h1><p class="subtitle">跨平台查看咨询，记录跟进状态和内容来源。</p></div><span class="sync-label"><i></i>演示会话</span></div>
+          <div class="inbox-toolbar"><label class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.5 15.5 4.2 4.2"/></svg><input id="message-search" type="search" placeholder="搜索客户或消息" /></label><label class="filter-select"><span>平台</span><select id="platform-filter"><option value="all">全部平台</option><option>抖音</option><option>小红书</option><option>淘宝</option><option>拼多多</option><option>闲鱼</option></select></label><label class="check-filter"><input id="unread-filter" type="checkbox" />只看未读</label></div>
           <div class="inbox-layout">
             <section class="conversation-list panel" aria-label="会话列表"><div class="list-title"><strong>最近会话</strong><span id="conversation-total"></span></div><div id="conversation-items"></div></section>
             <section class="conversation-view panel" id="conversation-view" aria-label="当前会话"></section>
@@ -80,16 +80,16 @@
         </section>
 
         <section class="page" id="page-orders" aria-labelledby="orders-title">
-          <div class="page-heading compact-heading"><div><p class="eyebrow">订单跟进</p><h1 id="orders-title">订单管理</h1><p class="subtitle">跟进订单状态，沉淀每笔成功成交及内容来源。</p></div><button class="button button-soft" id="export-orders">⇩ <span>导出订单</span></button></div>
+          <div class="page-heading compact-heading"><div><h1 id="orders-title">订单管理</h1><p class="subtitle">跟进订单状态，沉淀每笔成功成交及内容来源。</p></div><button class="button button-soft" id="export-orders"><svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v11M7.5 10l4.5 4.5 4.5-4.5M4 16.5v4h16v-4"/></svg><span>导出订单</span></button></div>
           <div class="order-summary" id="order-summary"></div>
-          <section class="panel orders-panel"><div class="orders-toolbar"><label class="search-box"><span>⌕</span><input id="order-search" type="search" placeholder="搜索订单号、客户或服务" /></label><label class="filter-select"><span>订单状态</span><select id="order-status-filter"><option value="all">全部状态</option><option>待确认</option><option>进行中</option><option>已完成</option></select></label><label class="filter-select"><span>平台</span><select id="order-platform-filter"><option value="all">全部平台</option><option>抖音</option><option>小红书</option><option>淘宝</option><option>拼多多</option><option>闲鱼</option></select></label></div><div class="table-scroll"><table class="orders-table"><thead><tr><th>订单</th><th>客户</th><th>服务内容</th><th>平台</th><th>内容来源</th><th>状态</th><th>金额</th><th>下单时间</th><th>操作</th></tr></thead><tbody id="order-rows"></tbody></table></div><div class="table-empty" id="orders-empty" hidden>没有符合条件的订单</div><div class="table-caption">演示订单用于展示字段与筛选方式，非真实订单记录。</div></section>
+          <section class="panel orders-panel"><div class="orders-toolbar"><label class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.5 15.5 4.2 4.2"/></svg><input id="order-search" type="search" placeholder="搜索订单号、客户或服务" /></label><label class="filter-select"><span>订单状态</span><select id="order-status-filter"><option value="all">全部状态</option><option>待确认</option><option>进行中</option><option>已完成</option></select></label><label class="filter-select"><span>平台</span><select id="order-platform-filter"><option value="all">全部平台</option><option>抖音</option><option>小红书</option><option>淘宝</option><option>拼多多</option><option>闲鱼</option></select></label></div><div class="table-scroll"><table class="orders-table"><thead><tr><th>订单</th><th>客户</th><th>服务内容</th><th>平台</th><th>内容来源</th><th>状态</th><th>金额</th><th>下单时间</th><th>操作</th></tr></thead><tbody id="order-rows"></tbody></table></div><div class="table-empty" id="orders-empty" hidden>没有符合条件的订单</div><div class="table-caption">演示订单用于展示字段与筛选方式，非真实订单记录。</div></section>
           <section class="panel success-panel"><div class="panel-heading"><div><h2>成功订单记录</h2><p>成交后确认一次，记录会保存在本机浏览器，并计入注意力矩阵。</p></div><button class="text-button" id="export-success">导出成交记录</button></div><div class="table-scroll"><table class="orders-table"><thead><tr><th>成交日期</th><th>订单</th><th>平台</th><th>客户</th><th>服务内容</th><th>内容来源</th><th>金额</th></tr></thead><tbody id="success-rows"></tbody></table></div><div class="table-empty" id="success-empty" hidden>还没有成功订单记录</div></section>
         </section>
       </main>
     </div>
     <dialog class="capture-dialog" id="capture-dialog">
       <form id="capture-form" method="dialog">
-        <div class="dialog-heading"><div><h2>录入营销数据</h2><p>按平台和内容主题记一条数据，供矩阵分析。</p></div><button class="dialog-close" type="button" id="close-capture" aria-label="关闭">×</button></div>
+        <div class="dialog-heading"><div><h2>录入营销数据</h2><p>按平台和内容主题记一条数据，供矩阵分析。</p></div><button class="dialog-close" type="button" id="close-capture" aria-label="关闭"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
         <div class="capture-fields">
           <label>平台<select name="platform" required><option>抖音</option><option>小红书</option><option>淘宝</option><option>拼多多</option><option>闲鱼</option></select></label>
           <label>内容主题<select name="topic" required><option>Excel 自动报表</option><option>批量文件工具</option><option>本地知识库</option><option>轻量网页定制</option></select></label>

@@ -1,6 +1,8 @@
-# 码上有解商家工作台原型
+# Viusalized Studio · 码上有解可视化工作台
 
 本地运行的无依赖网页原型，包含经营总览、注意力矩阵、统一收件箱和订单管理。页面中的客户、消息、订单和营销数据全部是模拟数据；目前没有连接平台账号或后端服务。
+
+在线演示：[Viusalized Studio](https://victkk11-beep.github.io/viusalized-studio/)
 
 推送到 GitHub `main` 分支后，`.github/workflows/deploy-pages.yml` 会发布静态站点。仓库的 Pages 来源需要设为 **GitHub Actions**。
 
