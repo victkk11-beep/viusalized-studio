@@ -112,7 +112,8 @@ function renderMatrix() {
   $("#insight-content").innerHTML = `<div class="insight-kicker">当前表现较好的主题</div><div class="insight-topic">${top.topic}</div><div class="insight-stats"><div class="insight-stat"><strong>${top.value}</strong><small>${labels[metric]}</small></div><div class="insight-stat"><strong>${top.inquiries}</strong><small>相关咨询</small></div><div class="insight-stat"><strong>${top.orders}</strong><small>相关订单</small></div></div><p class="insight-copy">演示数据中，这类内容带来了 ${top.inquiries} 条咨询和 ${top.orders} 笔订单。继续发布同主题内容，并记录来源，验证趋势是否持续。</p>`;
 }
 function renderMetrics() {
-  const revenue = successfulOrders.reduce((sum, order) => sum + order.amount, 0);
+  const revenue = successfulOrders.filter((order) => inLastSevenDays(order.successDate)).reduce((sum, order) => sum + order.amount, 0);
+  const totalRevenue = successfulOrders.reduce((sum, order) => sum + order.amount, 0);
   const pending = orders.filter((order) => order.status === "待确认").length;
   const engagement = platforms.reduce((sum, platform) => sum + topics.reduce((topicSum, _, index) => topicSum + matrixValue(platform, "engagement", index), 0), 0);
   $("#metric-inquiries").textContent = conversations.filter((item) => item.status === "待回复").length;
@@ -122,7 +123,7 @@ function renderMetrics() {
   $("#metric-engagement").textContent = engagement;
   $("#unread-count").textContent = conversations.filter((item) => item.unread).length;
   $("#unread-count").hidden = !conversations.some((item) => item.unread);
-  $("#order-summary").innerHTML = `<div class="order-summary-item"><small>全部订单</small><strong>${orders.length} 笔</strong></div><div class="order-summary-item"><small>成功订单</small><strong>${successfulOrders.length} 笔</strong></div><div class="order-summary-item"><small>待确认</small><strong>${pending} 笔</strong></div><div class="order-summary-item"><small>成功成交额</small><strong>${money(revenue)}</strong></div>`;
+  $("#order-summary").innerHTML = `<div class="order-summary-item"><small>全部订单</small><strong>${orders.length} 笔</strong></div><div class="order-summary-item"><small>成功订单</small><strong>${successfulOrders.length} 笔</strong></div><div class="order-summary-item"><small>待确认</small><strong>${pending} 笔</strong></div><div class="order-summary-item"><small>成功成交额</small><strong>${money(totalRevenue)}</strong></div>`;
   renderSuccessfulOrders();
 }
 function renderPlatforms() {
