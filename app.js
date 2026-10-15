@@ -1,12 +1,13 @@
 const platforms = ["抖音", "小红书", "淘宝", "拼多多", "闲鱼"];
 const platformClass = { 抖音: "douyin", 小红书: "xhs", 淘宝: "taobao", 拼多多: "pdd", 闲鱼: "xianyu" };
+const platformStatus = { 抖音: "订单/客服文档已查", 小红书: "电商订单文档已查", 淘宝: "交易/消息文档已查", 拼多多: "订单文档已查", 闲鱼: "合作方文档已查 · 需邀请" };
 const topics = ["Excel 自动报表", "批量文件工具", "本地知识库", "轻量网页定制"];
 const matrixData = {
-  抖音: { engagement: [18, 26, 12, 8], inquiries: [2, 3, 1, 1], orders: [1, 1, 0, 0] },
-  小红书: { engagement: [31, 14, 22, 9], inquiries: [4, 1, 3, 1], orders: [2, 0, 1, 0] },
-  淘宝: { engagement: [5, 4, 3, 11], inquiries: [1, 0, 1, 2], orders: [0, 0, 0, 1] },
-  拼多多: { engagement: [7, 12, 2, 4], inquiries: [1, 2, 0, 0], orders: [0, 1, 0, 0] },
-  闲鱼: { engagement: [8, 11, 3, 6], inquiries: [2, 2, 0, 1], orders: [1, 1, 0, 0] },
+  抖音: { engagement: [18, 26, 12, 8], inquiries: [2, 3, 1, 1], orders: [0, 0, 0, 0] },
+  小红书: { engagement: [31, 14, 22, 9], inquiries: [4, 1, 3, 1], orders: [0, 0, 0, 0] },
+  淘宝: { engagement: [5, 4, 3, 11], inquiries: [1, 0, 1, 2], orders: [0, 0, 0, 0] },
+  拼多多: { engagement: [7, 12, 2, 4], inquiries: [1, 2, 0, 0], orders: [0, 0, 0, 0] },
+  闲鱼: { engagement: [8, 11, 3, 6], inquiries: [2, 2, 0, 1], orders: [0, 0, 0, 0] },
 };
 const conversations = [
   { id: "c1", platform: "小红书", customer: "林同学", initial: "林", time: "08:42", preview: "想做一个自动整理课程表的工具…", unread: true, topic: "批量文件工具", status: "待回复", history: [{ by: "customer", time: "08:42", text: "你好，想做一个自动整理课程表和提醒作业的小工具，大概需要多久？" }, { by: "owner", time: "08:49", text: "你好，可以先说下你现在的课程表是什么格式、希望在哪种设备上使用吗？" }, { by: "customer", time: "09:03", text: "现在是 Excel 表，最好能在电脑上直接用。" }] },
@@ -28,6 +29,8 @@ const orders = [
 ];
 let selectedConversation = conversations[0].id;
 const manualRecords = [];
+const successStorageKey = "ma-shang-you-jie-success-records-v1";
+let successfulOrders = loadSuccessfulOrders();
 let toastTimer;
 
 const $ = (selector) => document.querySelector(selector);
@@ -51,7 +54,41 @@ function inLastSevenDays(dateText) {
 }
 function matrixValue(platform, metric, topicIndex) {
   const topic = topics[topicIndex];
+  if (metric === "orders") return successfulOrders.filter((record) => record.platform === platform && record.topic === topic && inLastSevenDays(record.successDate)).length;
   return matrixData[platform][metric][topicIndex] + manualRecords.filter((record) => record.platform === platform && record.topic === topic && inLastSevenDays(record.date)).reduce((sum, record) => sum + record[metric], 0);
+}
+function loadSuccessfulOrders() {
+  let saved = [];
+  try {
+    const value = JSON.parse(localStorage.getItem(successStorageKey) || "[]");
+    if (Array.isArray(value)) saved = value.filter((item) => typeof item.orderId === "string" && typeof item.successDate === "string");
+  } catch { /* Invalid local demo data starts fresh. */ }
+  return orders.flatMap((order) => {
+    const previous = saved.find((item) => item.orderId === order.id);
+    if (order.status !== "已完成" && !previous) return [];
+    order.status = "已完成";
+    return [{ ...order, successDate: previous?.successDate || demoSuccessDate(order.date) }];
+  });
+}
+function persistSuccessfulOrders() {
+  try {
+    localStorage.setItem(successStorageKey, JSON.stringify(successfulOrders.map(({ id, successDate }) => ({ orderId: id, successDate }))));
+    return true;
+  } catch { return false; }
+}
+function demoSuccessDate(orderDate) {
+  const [month, day] = orderDate.split(" ")[0].split("-").map(Number);
+  const date = new Date();
+  date.setHours(0, 0, 0, 0);
+  date.setMonth(month - 1, day);
+  if (date > new Date()) date.setFullYear(date.getFullYear() - 1);
+  return localDateText(date);
+}
+function markOrderSuccessful(order) {
+  if (successfulOrders.some((record) => record.id === order.id)) return false;
+  order.status = "已完成";
+  successfulOrders.push({ ...order, successDate: localDateText(new Date()) });
+  return true;
 }
 function setPage(name) {
   document.querySelectorAll(".page").forEach((page) => page.classList.toggle("active", page.id === `page-${name}`));
@@ -75,20 +112,21 @@ function renderMatrix() {
   $("#insight-content").innerHTML = `<div class="insight-kicker">当前表现较好的主题</div><div class="insight-topic">${top.topic}</div><div class="insight-stats"><div class="insight-stat"><strong>${top.value}</strong><small>${labels[metric]}</small></div><div class="insight-stat"><strong>${top.inquiries}</strong><small>相关咨询</small></div><div class="insight-stat"><strong>${top.orders}</strong><small>相关订单</small></div></div><p class="insight-copy">演示数据中，这类内容带来了 ${top.inquiries} 条咨询和 ${top.orders} 笔订单。继续发布同主题内容，并记录来源，验证趋势是否持续。</p>`;
 }
 function renderMetrics() {
-  const revenue = orders.reduce((sum, order) => sum + order.amount, 0);
+  const revenue = successfulOrders.reduce((sum, order) => sum + order.amount, 0);
   const pending = orders.filter((order) => order.status === "待确认").length;
   const engagement = platforms.reduce((sum, platform) => sum + topics.reduce((topicSum, _, index) => topicSum + matrixValue(platform, "engagement", index), 0), 0);
   $("#metric-inquiries").textContent = conversations.filter((item) => item.status === "待回复").length;
-  $("#metric-orders").textContent = orders.length;
+  $("#metric-orders").textContent = successfulOrders.length;
   $("#metric-pending").textContent = pending;
   $("#metric-revenue").textContent = money(revenue);
   $("#metric-engagement").textContent = engagement;
   $("#unread-count").textContent = conversations.filter((item) => item.unread).length;
   $("#unread-count").hidden = !conversations.some((item) => item.unread);
-  $("#order-summary").innerHTML = `<div class="order-summary-item"><small>演示订单</small><strong>${orders.length} 笔</strong></div><div class="order-summary-item"><small>待确认</small><strong>${pending} 笔</strong></div><div class="order-summary-item"><small>进行中</small><strong>${orders.filter((o) => o.status === "进行中").length} 笔</strong></div><div class="order-summary-item"><small>演示成交额</small><strong>${money(revenue)}</strong></div>`;
+  $("#order-summary").innerHTML = `<div class="order-summary-item"><small>全部订单</small><strong>${orders.length} 笔</strong></div><div class="order-summary-item"><small>成功订单</small><strong>${successfulOrders.length} 笔</strong></div><div class="order-summary-item"><small>待确认</small><strong>${pending} 笔</strong></div><div class="order-summary-item"><small>成功成交额</small><strong>${money(revenue)}</strong></div>`;
+  renderSuccessfulOrders();
 }
 function renderPlatforms() {
-  $("#platform-list").innerHTML = platforms.map((platform) => `<div class="platform-item">${platformMark(platform)}<span class="platform-info"><strong>${platform}</strong><small>待接入</small></span></div>`).join("");
+  $("#platform-list").innerHTML = platforms.map((platform) => `<div class="platform-item">${platformMark(platform)}<span class="platform-info"><strong>${platform}</strong><small>${platformStatus[platform]}</small></span></div>`).join("");
 }
 function renderConversationList() {
   const search = $("#message-search").value.trim().toLowerCase();
@@ -127,17 +165,37 @@ function renderOrders() {
   const status = $("#order-status-filter").value;
   const platform = $("#order-platform-filter").value;
   const filtered = orders.filter((order) => (status === "all" || order.status === status) && (platform === "all" || order.platform === platform) && (!search || `${order.id}${order.customer}${order.service}${order.topic}`.toLowerCase().includes(search)));
-  $("#order-rows").innerHTML = filtered.map((order) => `<tr><td>${order.id}</td><td><span class="order-customer"><span class="customer-avatar">${order.initial}</span>${order.customer}</span></td><td><span class="order-service">${order.service}</span></td><td><span class="conversation-platform">${order.platform}</span></td><td><span class="order-source">${order.topic}</span></td><td><span class="order-status ${order.status === "待确认" ? "status-pending" : order.status === "进行中" ? "status-progress" : "status-done"}">${order.status}</span></td><td>${money(order.amount)}</td><td>${order.date}</td></tr>`).join("");
+  $("#order-rows").innerHTML = filtered.map((order) => `<tr><td>${order.id}</td><td><span class="order-customer"><span class="customer-avatar">${order.initial}</span>${order.customer}</span></td><td><span class="order-service">${order.service}</span></td><td><span class="conversation-platform">${order.platform}</span></td><td><span class="order-source">${order.topic}</span></td><td><span class="order-status ${order.status === "待确认" ? "status-pending" : order.status === "进行中" ? "status-progress" : "status-done"}">${order.status}</span></td><td>${money(order.amount)}</td><td>${order.date}</td><td>${successfulOrders.some((record) => record.id === order.id) ? `<span class="recorded-label">已入记录</span>` : `<button class="record-success" data-order-success="${order.id}">记录成功</button>`}</td></tr>`).join("");
   $("#orders-empty").hidden = filtered.length > 0;
+  document.querySelectorAll("[data-order-success]").forEach((button) => button.addEventListener("click", () => {
+    const order = orders.find((item) => item.id === button.dataset.orderSuccess);
+    if (!order || !markOrderSuccessful(order)) return;
+    renderOrders();
+    renderMetrics();
+    renderMatrix();
+    showToast(persistSuccessfulOrders() ? "成功订单已记录并保存在本机浏览器" : "本次已记录；浏览器存储不可用，刷新后会丢失");
+  }));
+}
+function renderSuccessfulOrders() {
+  const rows = [...successfulOrders].sort((a, b) => b.successDate.localeCompare(a.successDate));
+  $("#success-rows").innerHTML = rows.map((order) => `<tr><td>${order.successDate}</td><td>${order.id}</td><td>${order.platform}</td><td>${order.customer}</td><td><span class="order-service">${order.service}</span></td><td><span class="order-source">${order.topic}</span></td><td>${money(order.amount)}</td></tr>`).join("");
+  $("#success-empty").hidden = rows.length > 0;
 }
 function exportOrders() {
   const rows = [["订单号", "客户", "服务内容", "平台", "内容来源", "状态", "金额", "下单时间"], ...orders.map((order) => [order.id, order.customer, order.service, order.platform, order.topic, order.status, order.amount, order.date])];
+  downloadCsv("码上有解-演示订单.csv", rows);
+}
+function exportSuccessfulOrders() {
+  const rows = [["成交日期", "订单号", "平台", "客户", "服务内容", "内容来源", "金额"], ...successfulOrders.map((order) => [order.successDate, order.id, order.platform, order.customer, order.service, order.topic, order.amount])];
+  downloadCsv("码上有解-成功订单记录.csv", rows);
+}
+function downloadCsv(filename, rows) {
   const csv = "\uFEFF" + rows.map((row) => row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(",")).join("\r\n");
   const link = document.createElement("a");
   link.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
-  link.download = "码上有解-演示订单.csv";
+  link.download = filename;
   link.click();
-  URL.revokeObjectURL(link.href);
+  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 }
 
 document.querySelectorAll(".nav-item").forEach((item) => item.addEventListener("click", () => setPage(item.dataset.page)));
@@ -160,7 +218,7 @@ $("#cancel-capture").addEventListener("click", () => captureDialog.close());
 $("#capture-form").addEventListener("submit", (event) => {
   event.preventDefault();
   const values = new FormData(event.currentTarget);
-  const record = { platform: values.get("platform"), topic: values.get("topic"), date: values.get("date"), engagement: Number(values.get("engagement")), inquiries: Number(values.get("inquiries")), orders: Number(values.get("orders")) };
+  const record = { platform: values.get("platform"), topic: values.get("topic"), date: values.get("date"), engagement: Number(values.get("engagement")), inquiries: Number(values.get("inquiries")) };
   manualRecords.push(record);
   captureDialog.close();
   renderMatrix();
@@ -172,7 +230,7 @@ $("#capture-form").addEventListener("submit", (event) => {
 ["#message-search", "#platform-filter", "#unread-filter"].forEach((selector) => $(selector).addEventListener("input", renderConversationList));
 ["#order-search", "#order-status-filter", "#order-platform-filter"].forEach((selector) => $(selector).addEventListener("input", renderOrders));
 $("#refresh-demo").addEventListener("click", () => showToast("演示数据已是最新"));
-$("#connection-info").addEventListener("click", () => showToast("平台授权与接口能力需逐个平台核实后接入"));
 $("#export-orders").addEventListener("click", exportOrders);
+$("#export-success").addEventListener("click", exportSuccessfulOrders);
 $("#today-label").textContent = new Intl.DateTimeFormat("zh-CN", { month: "long", day: "numeric", weekday: "long" }).format(new Date());
 renderMetrics(); renderPlatforms(); renderMatrix(); renderInbox(); renderOrders();
